@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SPEN7DanaOSIS</title>
+  <link rel="icon" href="logo-osis.png" type="image/png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Dana OSIS</h1>
+      <img src="logo-osis.png" alt="Logo OSIS" class="w-12 h-12 rounded-full" />
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="flex-grow container mx-auto px-4 py-8">
+
+    <!-- Login Page -->
+    <div id="loginPage" class="flex items-center justify-center min-h-screen">
+      <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+        <div class="text-center mb-8">
+          <img src="logo-osis.png" alt="Logo OSIS" class="w-20 h-20 mx-auto mb-4 rounded-full" />
+          <h1 class="text-2xl font-bold text-gray-800">Login Dana OSIS</h1>
+          <p class="text-gray-600">Masuk untuk mengakses kalkulator dana</p>
+        </div>
+        <form id="loginForm" class="space-y-4">
+          <div>
+            <label class="block text-gray-700 mb-1">Username</label>
+            <input type="text" id="username" required class="w-full px-4 py-2 border rounded-lg focus:ring-blue-500" />
+          </div>
+          <div>
+            <label class="block text-gray-700 mb-1">Password</label>
+            <div class="relative">
+              <input type="password" id="password" required class="w-full px-4 py-2 border rounded-lg focus:ring-blue-500" />
+              <button type="button" onclick="togglePassword()" class="absolute right-0 top-0 h-full px-3 text-gray-600">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg">Masuk</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="hidden">
+      <!-- Section 1: Header Info -->
+      <section class="mb-10">
+        <h2 class="text-3xl font-bold text-gray-800">Kalkulator Dana OSIS</h2>
+        <p class="text-gray-600">Catat dan kelola keuangan OSIS</p>
+      </section>
+
+      <!-- Section 2: Summary Cards -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div class="bg-white p-6 rounded-xl shadow border">
+          <p class="text-gray-500">Total Dana</p>
+          <h2 id="totalDana" class="text-3xl font-bold text-gray-800">Rp 0</h2>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow border">
+          <p class="text-gray-500">Total Pemasukan</p>
+          <h2 id="totalPemasukan" class="text-3xl font-bold text-green-600">Rp 0</h2>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow border">
+          <p class="text-gray-500">Total Pengeluaran</p>
+          <h2 id="totalPengeluaran" class="text-3xl font-bold text-red-600">Rp 0</h2>
+        </div>
+      </section>
+
+      <!-- Section 3: Form Tambah Transaksi -->
+      <section class="bg-white p-6 rounded-xl shadow border mb-8">
+        <h2 class="text-xl font-semibold mb-4 text-gray-800">Tambah Transaksi</h2>
+        <form id="transactionForm" class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-gray-700 mb-1">Jenis Transaksi</label>
+              <label><input type="radio" name="type" value="income" checked class="mr-2">Pemasukan</label>
+              <label class="ml-4"><input type="radio" name="type" value="expense" class="mr-2">Pengeluaran</label>
+            </div>
+            <div>
+              <label class="block text-gray-700 mb-1">Jumlah (Rp)</label>
+              <input type="number" id="amount" required class="w-full px-4 py-2 border rounded-lg focus:ring-blue-500" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-gray-700 mb-1">Keterangan</label>
+            <input type="text" id="description" required class="w-full px-4 py-2 border rounded-lg" placeholder="Contoh: Iuran kelas X" />
+          </div>
+          <div>
+            <label class="block text-gray-700 mb-1">Tanggal</label>
+            <input type="date" id="date" required class="w-full px-4 py-2 border rounded-lg" />
+          </div>
+          <div class="flex space-x-3 pt-2">
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg"><i class="fas fa-plus mr-2"></i>Tambah</button>
+            <button type="button" id="resetBtn" class="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg"><i class="fas fa-redo mr-2"></i>Reset</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Section 4: Riwayat Transaksi -->
+      <section class="bg-white p-6 rounded-xl shadow border">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-semibold">Riwayat Transaksi</h2>
+          <div class="flex space-x-2">
+            <button id="exportBtn" class="bg-green-600 text-white px-4 py-2 text-sm rounded-lg"><i class="fas fa-file-export mr-2"></i>Ekspor</button>
+            <button id="clearBtn" class="bg-red-600 text-white px-4 py-2 text-sm rounded-lg"><i class="fas fa-trash mr-2"></i>Hapus Semua</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <div id="noTransactions" class="text-center py-8 text-gray-500">
+            <i class="fas fa-history text-4xl mb-3"></i>
+            <p>Belum ada transaksi</p>
+          </div>
+          <table id="transactionsTable" class="w-full hidden">
+            <thead>
+              <tr class="border-b text-gray-600">
+                <th class="text-left py-2 px-2">Tanggal</th>
+                <th class="text-left py-2 px-2">Keterangan</th>
+                <th class="text-left py-2 px-2">Jenis</th>
+                <th class="text-right py-2 px-2">Jumlah</th>
+                <th class="text-center py-2 px-2">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="transactionsBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- JavaScript -->
+  <script>
+    function togglePassword() {
+      const pw = document.getElementById('password');
+      const icon = document.querySelector('#password + button i');
+      if (pw.type === 'password') {
+        pw.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        pw.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    const loginPage = document.getElementById('loginPage');
+    const mainContent = document.getElementById('mainContent');
+    const loginForm = document.getElementById('loginForm');
+
+    loginForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      if (username === 'OSISspen7' && password === 'Spen7OSIS') {
+        loginPage.classList.add('hidden');
+        mainContent.classList.remove('hidden');
+      } else {
+        alert('Username atau password salah!');
+      }
+    });
+
+    let transactions = JSON.parse(localStorage.getItem('osisTransactions')) || [];
+    const transactionForm = document.getElementById('transactionForm');
+    const transactionsBody = document.getElementById('transactionsBody');
+    const transactionsTable = document.getElementById('transactionsTable');
+    const noTransactions = document.getElementById('noTransactions');
+    const totalDana = document.getElementById('totalDana');
+    const totalPemasukan = document.getElementById('totalPemasukan');
+    const totalPengeluaran = document.getElementById('totalPengeluaran');
+    const resetBtn = document.getElementById('resetBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const exportBtn = document.getElementById('exportBtn');
+
+    document.getElementById('date').valueAsDate = new Date();
+
+    function formatRupiah(amount) {
+      return 'Rp ' + amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function calculateTotals() {
+      let pemasukan = 0, pengeluaran = 0;
+      transactions.forEach(t => {
+        t.type === 'income' ? pemasukan += t.amount : pengeluaran += t.amount;
+      });
+      totalDana.textContent = formatRupiah(pemasukan - pengeluaran);
+      totalPemasukan.textContent = formatRupiah(pemasukan);
+      totalPengeluaran.textContent = formatRupiah(pengeluaran);
+    }
+
+    function renderTransactions() {
+      if (transactions.length === 0) {
+        transactionsTable.classList.add('hidden');
+        noTransactions.classList.remove('hidden');
+        return;
+      }
+      noTransactions.classList.add('hidden');
+      transactionsTable.classList.remove('hidden');
+      transactionsBody.innerHTML = '';
+      [...transactions].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach((t, i) => {
+        const row = document.createElement('tr');
+        const date = new Date(t.date).toLocaleDateString('id-ID');
+        const typeText = t.type === 'income' ? 'Pemasukan' : 'Pengeluaran';
+        const typeColor = t.type === 'income' ? 'green' : 'red';
+        row.innerHTML = `
+          <td class="py-2 px-2">${date}</td>
+          <td class="py-2 px-2">${t.description}</td>
+          <td class="py-2 px-2 text-${typeColor}-600">${typeText}</td>
+          <td class="py-2 px-2 text-right font-medium text-${typeColor}-600">${formatRupiah(t.amount)}</td>
+          <td class="py-2 px-2 text-center">
+            <button onclick="deleteTransaction(${i})" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
+          </td>`;
+        transactionsBody.appendChild(row);
+      });
+    }
+
+    transactionForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const type = document.querySelector('input[name="type"]:checked').value;
+      const amount = parseFloat(document.getElementById('amount').value);
+      const description = document.getElementById('description').value.trim();
+      const date = document.getElementById('date').value;
+      if (!amount || !description || !date) return alert('Lengkapi semua data!');
+      const newTransaction = { type, amount, description, date };
+      transactions.push(newTransaction);
+      localStorage.setItem('osisTransactions', JSON.stringify(transactions));
+      renderTransactions();
+      calculateTotals();
+      transactionForm.reset();
+      document.getElementById('date').valueAsDate = new Date();
+    });
+
+    window.deleteTransaction = function (index) {
+      if (confirm('Hapus transaksi ini?')) {
+        transactions.splice(index, 1);
+        localStorage.setItem('osisTransactions', JSON.stringify(transactions));
+        renderTransactions();
+        calculateTotals();
+      }
+    };
+
+    resetBtn.addEventListener('click', () => {
+      transactionForm.reset();
+      document.getElementById('date').valueAsDate = new Date();
+    });
+
+    clearBtn.addEventListener('click', () => {
+      if (confirm('Hapus semua transaksi?')) {
+        transactions = [];
+        localStorage.removeItem('osisTransactions');
+        renderTransactions();
+        calculateTotals();
+      }
+    });
+
+    exportBtn.addEventListener('click', () => {
+      if (transactions.length === 0) return alert('Tidak ada data untuk diekspor!');
+      let csv = 'No,Tanggal,Jenis,Keterangan,Jumlah\n';
+      transactions.forEach((t, i) => {
+        const d = new Date(t.date).toLocaleDateString('id-ID');
+        const type = t.type === 'income' ? 'Pemasukan' : 'Pengeluaran';
+        csv += `${i+1},${d},${type},"${t.description}",${t.amount}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `laporan_dana_osis_${new Date().toISOString().slice(0,10)}.csv`;
+      link.click();
+    });
+
+    renderTransactions();
+    calculateTotals();
+  </script>
+</body>
+</html>
