@@ -1,8 +1,15 @@
 {
   "name": "Dana OSIS SMPN7 BARRU",
   "short_name": "Dana OSIS",
-  "start_url": "./",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
-  "icons":
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
